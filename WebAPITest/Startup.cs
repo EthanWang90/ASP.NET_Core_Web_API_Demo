@@ -14,6 +14,7 @@ using WebAPITest.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebAPITest.Options;
+using WebAPITest.Services;
 
 namespace WebAPITest
 {
@@ -29,17 +30,7 @@ namespace WebAPITest
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddSwaggerGen(x =>
-            {
-                x.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Ethan API", Version = "v1" });
-            });
+            services.serviceRegister(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

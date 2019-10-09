@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebAPITest.Domain
+namespace WebAPITest.Contracts.Response
 {
-    public class Post
+    public class PostResponse
     {
-        public string Id;
-        public string Name;
+        public string Id { get; set; }
     }
 }

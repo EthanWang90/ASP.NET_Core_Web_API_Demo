@@ -14,6 +14,9 @@ namespace WebAPITest.Contracts.v1
         public static class Post
         {
             public const string GetAllPosts = baseUrl + "/posts";
+            public const string Get = baseUrl + "/post/{Id}";
+            public const string Create = baseUrl + "/posts";
+            public const string Update = baseUrl + "/post/{Id}";
         }
     }
 }
