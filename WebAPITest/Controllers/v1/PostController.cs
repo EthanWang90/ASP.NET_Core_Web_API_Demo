@@ -30,7 +30,7 @@ namespace WebAPITest.Controllers.v1
         }
 
         [HttpGet(ApiRoutes.Post.Get)]
-        public IActionResult get([FromRoute] string Id)
+        public IActionResult get([FromRoute] Guid Id)
         {
             Post post = _postsCollection.getPost(Id);
             if (post == null)
@@ -41,7 +41,7 @@ namespace WebAPITest.Controllers.v1
         }
 
         [HttpPut(ApiRoutes.Post.Update)]
-        public IActionResult updatePost([FromRoute] string Id, [FromBody] UpdatePostRequest updatePostRequest)
+        public IActionResult updatePost([FromRoute] Guid Id, [FromBody] UpdatePostRequest updatePostRequest)
         {
             Post post = new Post { Id = Id, Name = updatePostRequest.Name };
             bool result = _postsCollection.updatePost(post);
@@ -53,24 +53,29 @@ namespace WebAPITest.Controllers.v1
         }
 
         [HttpPost(ApiRoutes.Post.Create)]
-        public IActionResult createPost([FromBody] PostRequest postCreate)
+        public async Task<IActionResult> createPost([FromBody] PostRequest postCreate)
         {
 
-            var post = new Post { Id = postCreate.Id };
+            var post = new Post { Name = postCreate.Name };
 
-            if (string.IsNullOrEmpty(post.Id))
-            {
-                post.Id = Guid.NewGuid().ToString();
-            }
-
-            _postsCollection.getAllPosts().Add(post);
+            await _postsCollection.createPostAsync(post);
 
             string baseUrl = $"{HttpContext.Request.Scheme}//{HttpContext.Request.Host.ToUriComponent()}";
-            string locationUrl = baseUrl + "/" + ApiRoutes.Post.Get.Replace("{postId}", post.Id);
+            string locationUrl = baseUrl + "/" + ApiRoutes.Post.Get.Replace("{postId}", post.Id.ToString());
 
             var postResponse = new PostResponse { Id = post.Id };
 
             return Created(locationUrl, postResponse);
+        }
+
+        [HttpDelete(ApiRoutes.Post.Delete)]
+        public async Task<IActionResult> deletePost([FromRoute] Guid Id)
+        {
+            bool result = await _postsCollection.deletePostAsync(Id);
+            if (result)
+                return NoContent();
+
+            return NotFound();
         }
     }
 }

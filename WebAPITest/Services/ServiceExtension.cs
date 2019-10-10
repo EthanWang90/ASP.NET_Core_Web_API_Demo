@@ -26,7 +26,7 @@ namespace WebAPITest.Services
             {
                 x.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Ethan API", Version = "v1" });
             });
-            services.AddSingleton<IPostsCollection, PostsCollection>();
+            services.AddScoped<IPostsCollection, PostsCollection>();
         }
     }
 }

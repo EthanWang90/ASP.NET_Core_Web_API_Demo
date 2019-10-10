@@ -17,6 +17,7 @@ namespace WebAPITest.Contracts.v1
             public const string Get = baseUrl + "/post/{Id}";
             public const string Create = baseUrl + "/posts";
             public const string Update = baseUrl + "/post/{Id}";
+            public const string Delete = baseUrl + "/post/{Id}";
         }
     }
 }

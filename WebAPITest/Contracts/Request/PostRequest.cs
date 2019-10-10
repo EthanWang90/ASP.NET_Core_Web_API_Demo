@@ -7,6 +7,6 @@ namespace WebAPITest.Contracts.Request
 {
     public class PostRequest
     {
-        public string Id { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -2,35 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAPITest.Data;
 using WebAPITest.Domain;
 
 namespace WebAPITest.Services
 {
     public class PostsCollection : IPostsCollection
     {
-        private List<Post> _posts;
+        ApplicationDbContext _dbContext;
 
-        public PostsCollection()
+        public PostsCollection(ApplicationDbContext dbContext)
         {
-            _posts = new List<Post>();
-            for (int i = 0; i < 5; i++)
-            {
-                _posts.Add(new Post
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = $"Post name {i}"
-                });
-            }
+            _dbContext = dbContext;
+        }
+
+        public async Task<bool> createPostAsync(Post post)
+        {
+            await _dbContext.Posts.AddAsync(post);
+            int creationCount = await _dbContext.SaveChangesAsync();
+            return creationCount > 0;
+        }
+
+        public async Task<bool> deletePostAsync(Guid id)
+        {
+            Post post = _dbContext.Posts.FirstOrDefault<Post>(x => x.Id == id);
+
+            if (post == null)
+                return false;
+
+            _dbContext.Posts.Remove(post);
+            int deleteCount = await _dbContext.SaveChangesAsync();
+            return deleteCount > 0;
         }
 
         public List<Post> getAllPosts()
         {
-            return _posts;
+            List<Post> posts = _dbContext.Posts.ToList<Post>();
+            return posts;
         }
 
-        public Post getPost(string id)
+        public Post getPost(Guid id)
         {
-            Post post = _posts.FirstOrDefault<Post>(x => x.Id == id);
+            Post post = _dbContext.Posts.FirstOrDefault<Post>(x => x.Id == id);
             if(post == null)
             {
                 return null;
@@ -40,14 +53,9 @@ namespace WebAPITest.Services
 
         public bool updatePost(Post post)
         {
-            Post targetPost = _posts.FirstOrDefault<Post>(x => x.Id == post.Id);
-            if(targetPost == null)
-            {
-                return false;
-            }
-            int index = _posts.IndexOf(targetPost);
-            _posts[index].Name = post.Name;
-            return true;
+            _dbContext.Posts.Update(post);
+            int updateCount = _dbContext.SaveChanges();
+            return updateCount > 0;
         }
     }
 }

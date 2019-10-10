@@ -10,8 +10,12 @@ namespace WebAPITest.Services
     {
         List<Post> getAllPosts();
 
-        Post getPost(string id);
+        Post getPost(Guid id);
+
+        Task<bool> createPostAsync(Post post);
 
         bool updatePost(Post post);
+
+        Task<bool> deletePostAsync(Guid id);
     }
 }
