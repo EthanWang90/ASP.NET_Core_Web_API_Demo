@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebAPITest.Data;
 using WebAPITest.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPITest.Services
 {
@@ -35,15 +36,15 @@ namespace WebAPITest.Services
             return deleteCount > 0;
         }
 
-        public List<Post> getAllPosts()
+        public async Task<List<Post>> getAllPosts()
         {
-            List<Post> posts = _dbContext.Posts.ToList<Post>();
+            List<Post> posts = await _dbContext.Posts.ToListAsync<Post>();
             return posts;
         }
 
-        public Post getPost(Guid id)
+        public async Task<Post> getPost(Guid id)
         {
-            Post post = _dbContext.Posts.FirstOrDefault<Post>(x => x.Id == id);
+            Post post = await _dbContext.Posts.FirstOrDefaultAsync<Post>(x => x.Id == id);
             if(post == null)
             {
                 return null;
@@ -51,10 +52,10 @@ namespace WebAPITest.Services
             return post;
         }
 
-        public bool updatePost(Post post)
+        public async Task<bool> updatePost(Post post)
         {
             _dbContext.Posts.Update(post);
-            int updateCount = _dbContext.SaveChanges();
+            int updateCount = await _dbContext.SaveChangesAsync();
             return updateCount > 0;
         }
     }

@@ -8,13 +8,13 @@ namespace WebAPITest.Services
 {
     public interface IPostsCollection
     {
-        List<Post> getAllPosts();
+        Task<List<Post>> getAllPosts();
 
-        Post getPost(Guid id);
+        Task<Post> getPost(Guid id);
 
         Task<bool> createPostAsync(Post post);
 
-        bool updatePost(Post post);
+        Task<bool> updatePost(Post post);
 
         Task<bool> deletePostAsync(Guid id);
     }
