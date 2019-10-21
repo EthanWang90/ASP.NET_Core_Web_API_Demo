@@ -23,16 +23,16 @@ namespace WebAPITest.Controllers.v1
         }
 
         [HttpGet(ApiRoutes.Post.GetAllPosts)]
-        public IActionResult getAllPosts()
+        public async Task<IActionResult> getAllPosts()
         {
-            List<Post> posts = _postsCollection.getAllPosts();
+            List<Post> posts = await _postsCollection.getAllPosts();
             return Ok(posts);
         }
 
         [HttpGet(ApiRoutes.Post.Get)]
-        public IActionResult get([FromRoute] Guid Id)
+        public async Task<IActionResult> get([FromRoute] Guid Id)
         {
-            Post post = _postsCollection.getPost(Id);
+            Post post = await _postsCollection.getPost(Id);
             if (post == null)
             {
                 return NotFound("sorry, post not found");
@@ -41,10 +41,10 @@ namespace WebAPITest.Controllers.v1
         }
 
         [HttpPut(ApiRoutes.Post.Update)]
-        public IActionResult updatePost([FromRoute] Guid Id, [FromBody] UpdatePostRequest updatePostRequest)
+        public async Task<IActionResult> updatePost([FromRoute] Guid Id, [FromBody] UpdatePostRequest updatePostRequest)
         {
             Post post = new Post { Id = Id, Name = updatePostRequest.Name };
-            bool result = _postsCollection.updatePost(post);
+            bool result = await _postsCollection.updatePost(post);
             if (result)
             {
                 return Ok(post);
