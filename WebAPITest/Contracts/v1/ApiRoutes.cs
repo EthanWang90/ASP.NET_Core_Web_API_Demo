@@ -19,5 +19,11 @@ namespace WebAPITest.Contracts.v1
             public const string Update = baseUrl + "/post/{Id}";
             public const string Delete = baseUrl + "/post/{Id}";
         }
+
+        public static class Identity
+        {
+            public const string Register = baseUrl + "/register";
+            public const string Login = baseUrl + "/login";
+        }
     }
 }

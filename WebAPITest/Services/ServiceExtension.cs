@@ -29,6 +29,7 @@ namespace WebAPITest.Services
             JwtOptions jwtOptions = new JwtOptions();
             Configuration.Bind(nameof(jwtOptions), jwtOptions);
             services.AddSingleton(jwtOptions);
+            services.AddScoped<IIdentityService, IdentityService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
