@@ -17,5 +17,7 @@ namespace WebAPITest.Services
         Task<bool> updatePost(Post post);
 
         Task<bool> deletePostAsync(Guid id);
+
+        Task<bool> checkPostOwnershipAsync(Guid Id, string userId);
     }
 }

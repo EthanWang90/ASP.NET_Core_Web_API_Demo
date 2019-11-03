@@ -58,5 +58,16 @@ namespace WebAPITest.Services
             int updateCount = await _dbContext.SaveChangesAsync();
             return updateCount > 0;
         }
+
+        public async Task<bool> checkPostOwnershipAsync(Guid Id, string userId)
+        {
+            Post post = await _dbContext.Posts.SingleAsync(x => x.Id == Id);
+            if(post.UserId != userId)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -9,6 +9,7 @@ using WebAPITest.Contracts.Request;
 using WebAPITest.Contracts.Response;
 using WebAPITest.Contracts.v1;
 using WebAPITest.Domain;
+using WebAPITest.Extensions;
 using WebAPITest.Services;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -46,7 +47,16 @@ namespace WebAPITest.Controllers.v1
         [HttpPut(ApiRoutes.Post.Update)]
         public async Task<IActionResult> updatePost([FromRoute] Guid Id, [FromBody] UpdatePostRequest updatePostRequest)
         {
-            Post post = new Post { Id = Id, Name = updatePostRequest.Name };
+            string userId = HttpContext.getUserId();
+            bool isPostBelongsToUser = await _postsCollection.checkPostOwnershipAsync(Id, userId);
+
+            if (!isPostBelongsToUser)
+            {
+                return BadRequest("The post doesn't belong to the user");
+            }
+
+            Post post = await _postsCollection.getPost(Id);
+            post.Name = updatePostRequest.Name;
             bool result = await _postsCollection.updatePost(post);
             if (result)
             {
@@ -59,7 +69,12 @@ namespace WebAPITest.Controllers.v1
         public async Task<IActionResult> createPost([FromBody] PostRequest postCreate)
         {
 
-            var post = new Post { Name = postCreate.Name };
+            string userId = HttpContext.getUserId();
+
+            var post = new Post {
+                Name = postCreate.Name,
+                UserId = userId
+            };
 
             await _postsCollection.createPostAsync(post);
 
@@ -74,6 +89,14 @@ namespace WebAPITest.Controllers.v1
         [HttpDelete(ApiRoutes.Post.Delete)]
         public async Task<IActionResult> deletePost([FromRoute] Guid Id)
         {
+            string userId = HttpContext.getUserId();
+            bool isPostBelongsToUser = await _postsCollection.checkPostOwnershipAsync(Id, userId);
+
+            if (!isPostBelongsToUser)
+            {
+                return BadRequest("The post doesn't belong to the user");
+            }
+
             bool result = await _postsCollection.deletePostAsync(Id);
             if (result)
                 return NoContent();
