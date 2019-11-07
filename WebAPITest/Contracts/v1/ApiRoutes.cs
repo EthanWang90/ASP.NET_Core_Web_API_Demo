@@ -24,6 +24,7 @@ namespace WebAPITest.Contracts.v1
         {
             public const string Register = baseUrl + "/register";
             public const string Login = baseUrl + "/login";
+            public const string RefreshToken = baseUrl + "/RefreshToken";
         }
     }
 }

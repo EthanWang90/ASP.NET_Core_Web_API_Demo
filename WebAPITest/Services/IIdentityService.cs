@@ -10,5 +10,6 @@ namespace WebAPITest.Services
     {
         Task<AuthResult> RegisterAsync(string email, string password);
         Task<AuthResult> LoginAsync(string email, string password);
+        Task<AuthResult> RefreshTokenAsync(string token, string refreshToken);
     }
 }

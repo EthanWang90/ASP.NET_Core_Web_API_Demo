@@ -39,12 +39,13 @@ namespace WebAPITest.Controllers.v1
             }
 
             return Ok(new AuthSuccessResponse {
-                Token = authResult.Token
+                Token = authResult.Token,
+                RefreshToken = authResult.RefreshToken
             });
         }
 
         [HttpPost(ApiRoutes.Identity.Login)]
-        public async Task<IActionResult> Login([FromBody]LoginRequest loginRequest)
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             AuthResult authResult = await _identityService.LoginAsync(loginRequest.Email, loginRequest.Password);
 
@@ -56,8 +57,17 @@ namespace WebAPITest.Controllers.v1
             }
 
             return Ok(new AuthSuccessResponse {
-                Token = authResult.Token
+                Token = authResult.Token,
+                RefreshToken = authResult.RefreshToken
             });
+        }
+
+        [HttpPost(ApiRoutes.Identity.RefreshToken)]
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest refreshTokenRequest)
+        {
+            AuthResult newAuthResult = await _identityService.RefreshTokenAsync(refreshTokenRequest.Token, refreshTokenRequest.RefreshToken);
+
+            return Ok(newAuthResult);
         }
     }
 }
